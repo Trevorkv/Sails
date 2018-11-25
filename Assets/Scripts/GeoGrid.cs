@@ -2,68 +2,108 @@
 using System.Collections.Generic;
 
 public class GeoGrid : MonoBehaviour {
+	//the load distance relative to the center of the grid. a grid's dimension is in terms of geoCells
+	[SerializeField] private int gridRadius;
+	//A Prefab of a geocell to be initialized and cloned to make the cells of a grid 
+	[SerializeField] private GameObject geoCellPrefab;
 
-	[SerializeField] private int size;
-	[SerializeField] private GameObject geoCell_Origin;
-	[SerializeField] private GameObject geoCell_Center;
+	//The "origin point/cell" of the grid. Holds the center cell of the grid
+	private GameObject geoCellOrigin;
+	//The width of an individual cell
+	private float geoCellWidth;
+	//The length of an individual cell
+	private float geoCellHeight;
+	//The x-coordinante of the center cell
+	private int centerX;
+	//The y-coordinate of the center cell
+	private int centerY;
 
-	private GeoCell geoCellComponent;
+	//The 2d array of all the cells in the grid
 	private GameObject[,] geoCells;
-	private int centerIndex;
+	private int geoCellSize = 0;
+
 
 	// Use this for initialization
 	void Start () {
+		geoCellSize = (gridRadius * 2) + 1;
+		geoCells = new GameObject[geoCellSize, geoCellSize];
+		centerX = gridRadius;
+		centerY = gridRadius;
+		geoCellWidth = geoCellPrefab.GetComponent<GeoCell> ().DimX;
+		geoCellHeight = geoCellPrefab.GetComponent<GeoCell> ().DimY;
+//
+//		geoCellOrigin = (GameObject)Instantiate (geoCellPrefab,new Vector2(geoCellWidth, geoCellHeight), geoCellPrefab.transform.localRotation);
+//		geoCellOrigin.transform.SetParent (this.transform);
+//		geoCells [centerX, centerY] = geoCellOrigin;
 
-		geoCells = new GameObject[size,size];
-		centerIndex = (size - 1) / 2;
-		geoCellComponent = geoCell_Origin.GetComponent<GeoCell> ();
-
-		SpawnGeoCells ();
+		InitGeoCells ();
+		SetCenter(geoCells[centerX, centerY]);
 	}
 
-	private void SpawnGeoCells()
-	{
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
-				SpawnCell (j * geoCellComponent.DimX, i * geoCellComponent.DimY, i, j);
+	/**
+	 * Description: Initializes the geoCells found in the geoGrid
+	 * Date: 11-23-2018
+	*/
+	private void InitGeoCells()
+	{Debug.Log("Initializing geocells 2018");
+		Debug.Log (geoCells.GetUpperBound(1));
+		for (int i = 0; i < geoCellSize; i++) {
+			for (int j = 0; j < geoCellSize; j++) {
+				//if(i != centerY && j != centerX)
+					InitGeoCell (j * geoCellWidth, i * geoCellHeight, i, j);
 			}
 		}
-
-		SetCenter (geoCells[centerIndex, centerIndex]);
 
 		//PrintGrid ();
 	}
 
-	private GameObject SpawnCell(float posX, float posY, int row, int col)
+	/**
+	 * Description: Initializes a geoCell at position (posX, posY) in the 2d Cartesian plane and stores the geoCell 
+	 * 			 	as a GameObject in geoCells[row, col]
+	 * Date: 11-23-2018 
+	*/
+	private GameObject InitGeoCell(float posX, float posY, int rowIndex, int colIndex)
 	{
-		geoCells[row,col] = (GameObject)Instantiate (geoCell_Origin, new Vector3 (posX, posY, 0f),
-			geoCell_Origin.transform.localRotation);
+		Debug.Log ("In cell ");
+		geoCells[rowIndex,colIndex] = (GameObject)Instantiate (geoCellPrefab, new Vector3 (posX, posY, 0f),
+			geoCellPrefab.transform.localRotation);
 
-		geoCells [row, col].transform.SetParent (this.transform);
+		geoCells [rowIndex, colIndex].transform.SetParent (this.transform);
 		
-		return geoCells [row, col];
+		return geoCells [rowIndex, colIndex];
 	}
 
+	/**
+	 * Description: Assigns geoCell to be the center cell of the geoGrid
+	 * Date: 11-23-2018
+	*/
 	public void SetCenter(GameObject geoCell)
 	{
-		geoCell_Center = geoCell;
+		geoCellOrigin = geoCell;
 		alignGrid ();
 	}
-	
+
+	/**
+	 * Description: Re-aligns the geoGrid reative to the new center cell.
+	 * Date: 11-23-2018
+	*/
 	private bool alignGrid()
 	{
 		float hShift = 0f;
 		float vShift = 0f;
+		bool ret = false;
 
-		if(geoCell_Center != geoCells[centerIndex, centerIndex])
+		if(geoCellOrigin != geoCells[centerX, centerY])
 		{
-			hShift = geoCells [centerIndex, centerIndex].transform.position.x - geoCell_Center.transform.position.x;
-			vShift = geoCells [centerIndex, centerIndex].transform.position.y - geoCell_Center.transform.position.y;
+			hShift = geoCells [centerX, centerY].transform.position.x - geoCellOrigin.transform.position.x;
+			vShift = geoCells [centerX, centerY].transform.position.y - geoCellOrigin.transform.position.y;
 
 			alignGridHelper (hShift,vShift);
+
+			ret = true;
 		}
 
-		return false;
+		return ret;
 	}
 
 	/**
@@ -97,8 +137,8 @@ public class GeoGrid : MonoBehaviour {
 	 * 
 	*/
 	private void DeleteLeftCol()
-	{
-		for (int i = 0; i < size; i++) {
+	{		
+		for (int i = 0; i < geoCellSize; i++) {
 			Destroy (geoCells[i,0]);
 		}
 	}
@@ -109,8 +149,8 @@ public class GeoGrid : MonoBehaviour {
 	*/
 	private void DeleteRightCol()
 	{
-		for (int i = 0; i < size; i++) {
-			Destroy (geoCells[i,size-1]);
+		for (int i = 0; i < geoCellSize; i++) {
+			Destroy (geoCells[i,geoCellSize-1]);
 		}
 	}
 
@@ -120,7 +160,7 @@ public class GeoGrid : MonoBehaviour {
 	*/
 	private void DeleteBotRow()
 	{
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < geoCellSize; i++) {
 			Destroy (geoCells[0,i]);
 		}
 	}
@@ -131,8 +171,8 @@ public class GeoGrid : MonoBehaviour {
 	*/
 	private void DeleteTopRow()
 	{
-		for (int i = 0; i < size; i++) {
-			Destroy (geoCells[size-1,i]);
+		for (int i = 0; i < geoCellSize; i++) {
+			Destroy (geoCells[geoCellSize-1,i]);
 		}
 	}
 
@@ -142,8 +182,8 @@ public class GeoGrid : MonoBehaviour {
 	*/
 	private void ShiftGridLeft()
 	{
-		for (int i = 0; i < size; i++) {
-			for(int j = 0; j < size - 1; j++)
+		for (int i = 0; i < geoCellSize; i++) {
+			for(int j = 0; j < geoCellSize - 1; j++)
 			{
 				geoCells [i, j] = geoCells [i, j + 1];
 			}
@@ -156,9 +196,9 @@ public class GeoGrid : MonoBehaviour {
 	*/
 	private void ShiftGridRight()
 	{
-		for(int i = 0; i < size; i++)
+		for(int i = 0; i < geoCellSize; i++)
 		{
-			for(int j = size - 1; j > 0; j--)
+			for(int j = geoCellSize - 1; j > 0; j--)
 			{
 				geoCells [i, j] = geoCells [i, j - 1];
 			}
@@ -170,8 +210,8 @@ public class GeoGrid : MonoBehaviour {
 	*/
 	private void ShiftGridUp()
 	{
-		for (int i = size - 1; i > 0; i--) {
-			for (int j = 0; j < size; j++)
+		for (int i = geoCellSize - 1; i > 0; i--) {
+			for (int j = 0; j < geoCellSize; j++)
 			{
 				geoCells[i,j] = geoCells[i - 1, j];
 			}
@@ -183,8 +223,8 @@ public class GeoGrid : MonoBehaviour {
 	*/
 	private void ShiftGridDown()
 	{
-		for (int i = 0; i < size - 1; i++) {
-			for(int j = 0; j < size; j++)
+		for (int i = 0; i < geoCellSize - 1; i++) {
+			for(int j = 0; j < geoCellSize; j++)
 			{
 				geoCells[i,j] = geoCells[i + 1, j];
 			}
@@ -199,14 +239,14 @@ public class GeoGrid : MonoBehaviour {
 	{
 		Vector3 vec;
 
-		for (int i = 0; i < size; i++) {
-			vec = new Vector3 (geoCells[i,size - 1].transform.localPosition.x + geoCellComponent.DimY,
-				geoCells[i, size - 1].transform.localPosition.y);
+		for (int i = 0; i < geoCellSize; i++) {
+			vec = new Vector3 (geoCells[i,geoCellSize - 1].transform.localPosition.x + geoCellHeight,
+				geoCells[i, geoCellSize - 1].transform.localPosition.y);
 
-			geoCells[i, size - 1] = (GameObject)Instantiate (geoCell_Origin, vec,
-				geoCell_Origin.transform.localRotation);
+			geoCells[i, geoCellSize - 1] = (GameObject)Instantiate (geoCellPrefab, vec,
+				geoCellPrefab.transform.localRotation);
 
-			geoCells [i, size - 1].transform.SetParent (this.transform);
+			geoCells [i, geoCellSize - 1].transform.SetParent (this.transform);
 		}
 	}
 
@@ -217,12 +257,12 @@ public class GeoGrid : MonoBehaviour {
 	{
 		Vector3 vec;
 
-		for (int i = 0; i < size; i++) {
-			vec = new Vector3 (geoCells[i, 0].transform.localPosition.x - geoCellComponent.DimY,
+		for (int i = 0; i < geoCellSize; i++) {
+			vec = new Vector3 (geoCells[i, 0].transform.localPosition.x - geoCellHeight,
 				geoCells[i, 0].transform.localPosition.y);
 
-			geoCells[i, 0] = (GameObject)Instantiate (geoCell_Origin, vec,
-				geoCell_Origin.transform.localRotation);
+			geoCells[i, 0] = (GameObject)Instantiate (geoCellPrefab, vec,
+				geoCellPrefab.transform.localRotation);
 
 			geoCells [i, 0].transform.SetParent (this.transform);
 		}
@@ -235,14 +275,14 @@ public class GeoGrid : MonoBehaviour {
 	{
 		Vector3 vec;
 
-		for (int i = 0; i < size; i++) {
-			vec = new Vector3 (geoCells[size - 1, i].transform.localPosition.x,
-				geoCells[size - 1, i].transform.localPosition.y + geoCellComponent.DimX);
+		for (int i = 0; i < geoCellSize; i++) {
+			vec = new Vector3 (geoCells[geoCellSize - 1, i].transform.localPosition.x,
+				geoCells[geoCellSize - 1, i].transform.localPosition.y + geoCellWidth);
 
-			geoCells[size - 1, i] = (GameObject)Instantiate (geoCell_Origin, vec,
-				geoCell_Origin.transform.localRotation);
+			geoCells[geoCellSize - 1, i] = (GameObject)Instantiate (geoCellPrefab, vec,
+				geoCellPrefab.transform.localRotation);
 
-			geoCells [size - 1, i].transform.SetParent (this.transform);
+			geoCells [geoCellSize - 1, i].transform.SetParent (this.transform);
 		}
 	}
 
@@ -254,12 +294,12 @@ public class GeoGrid : MonoBehaviour {
 	{
 		Vector3 vec;
 
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < geoCellSize; i++) {
 			vec = new Vector3 (geoCells[0, i].transform.localPosition.x ,
-				geoCells[0, i].transform.localPosition.y - geoCellComponent.DimX);
+				geoCells[0, i].transform.localPosition.y - geoCellWidth);
 
-			geoCells[0, i] = (GameObject)Instantiate (geoCell_Origin, vec,
-				geoCell_Origin.transform.localRotation);
+			geoCells[0, i] = (GameObject)Instantiate (geoCellPrefab, vec,
+				geoCellPrefab.transform.localRotation);
 
 			geoCells [0, i].transform.SetParent (this.transform);
 		}
@@ -267,8 +307,8 @@ public class GeoGrid : MonoBehaviour {
 
 	private void PrintGrid()
 	{
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
+		for (int i = 0; i < geoCellSize; i++) {
+			for (int j = 0; j < geoCellSize; j++) {
 				Debug.Log ("x: " + i + " y: " + j + geoCells[i,j].transform.position);
 			}
 		}

@@ -14,10 +14,13 @@ public class GeoCell : MonoBehaviour {
 	private List<GameObject> rockList = new List<GameObject>();
 	static System.Random rnd = new System.Random ();
 
+	//private GeoGrid geoGridParent;
+
 
 	// Use this for initialization
 	void Start () {
 		Debug.Log ("Initializing");
+		//geoGridParent = this.GetComponentInParent<GeoGrid> ();
 		SpawnRocks (maxSeed);
 	}
 	
@@ -26,15 +29,16 @@ public class GeoCell : MonoBehaviour {
 	
 	}
 
+	//make current cell center of grid
 	void OnTriggerEnter2D(Collider2D body)
 	{
 		if (body.gameObject.name == "PlayerPrefab") {
 			Debug.Log ("Inside Cell");
 			Debug.Log (body.gameObject.name);
-			this.GetComponentInParent<GeoGrid> ().SetCenter (this.gameObject);
+			Debug.Log (this.gameObject);
+			this.GetComponentInParent<GeoGrid>().SetCenter (this.gameObject);
 		}
 	}
-
 
 	public int MaxSeed
 	{

@@ -29,7 +29,7 @@ hull, etc). Each modification will vary; some of them will change the ship's spe
 ===============
 --Ship Controls
 ===============
-?
+WASD convention moves the ship sprite along the four directions (up,left, down, right respectfuly) while the mouse will dictate the aiming and ship orientation based on its front
 
 ==================
 TownMenu

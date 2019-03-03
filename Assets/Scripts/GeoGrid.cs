@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Threading;
 
 public class GeoGrid : MonoBehaviour {
 	//the load distance relative to the center of the grid. a grid's dimension is in terms of geoCells
@@ -80,18 +81,16 @@ public class GeoGrid : MonoBehaviour {
 	public void SetCenter(GameObject geoCell)
 	{
 		geoCellOrigin = geoCell;
-		//alignGrid ();
 	}
 
 	/**
 	 * Description: Re-aligns the geoGrid reative to the new center cell.
 	 * Date: 11-23-2018
 	*/
-	private bool alignGrid()
+	private void alignGrid()
 	{
 		float hShift = 0f;
 		float vShift = 0f;
-		bool ret = false;
 
 		if(geoCellOrigin != geoCells[centerX, centerY])
 		{
@@ -99,11 +98,7 @@ public class GeoGrid : MonoBehaviour {
 			vShift = geoCells [centerX, centerY].transform.position.y - geoCellOrigin.transform.position.y;
 
 			alignGridHelper (hShift,vShift);
-
-			ret = true;
 		}
-
-		return ret;
 	}
 
 	/**
@@ -316,6 +311,8 @@ public class GeoGrid : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+//		Thread thr = new Thread (new ThreadStart(alignGrid));
+//		thr.Start ();
 		alignGrid ();
 	}
 

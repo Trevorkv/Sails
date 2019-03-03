@@ -1,0 +1,38 @@
+=============
+Game Overview
+=============
+
+-GamePlay
+	-Ship Mode
+		-Ship Controls
+		-Ship Specs
+		-Death States
+	-Menus
+		-Town Menus
+		-Ship Menus
+-Story
+	-(lore to be added)
+
+
+============
+ShipMode
+============
+A 2D top-down side scroller were the player takes command of a ship and explores an open map with randomly
+generated interactables/objects. Lightly random enemy spawns will be in place depending on variables of the game state which include the state of the player and the state of the location the player is in.
+
+==========
+--Ship Specs
+==========
+Have the ship ( character's sprite) be customizable while docked in towns. Have these modifications be modular; this means that each modification will take up a part of the ship(bow, stern, port, starboard, thrusters, engine,
+hull, etc). Each modification will vary; some of them will change the ship's specs while others may grant new abilities. 
+
+===============
+--Ship Controls
+===============
+?
+
+==================
+TownMenu
+==================
+Visiting a town will open up a town menu with options. Think of potential shop vendors and/or mission hubs etc.
+

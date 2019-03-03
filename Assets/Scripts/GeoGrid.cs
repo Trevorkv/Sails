@@ -80,7 +80,7 @@ public class GeoGrid : MonoBehaviour {
 	public void SetCenter(GameObject geoCell)
 	{
 		geoCellOrigin = geoCell;
-		alignGrid ();
+		//alignGrid ();
 	}
 
 	/**
@@ -316,7 +316,12 @@ public class GeoGrid : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-	
+		alignGrid ();
+	}
+
+	void FixedUpdate()
+	{
+//		alignGrid ();
 	}
 		
 }

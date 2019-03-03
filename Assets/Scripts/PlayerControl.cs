@@ -29,16 +29,14 @@ public class PlayerControl : MonoBehaviour {
 	void FixedUpdate()
 	{
 		float VScale = Input.GetAxis ("Vertical");
-		float bScale = Input.GetAxis ("Vertical_Negative");
-		float HScale = Input.GetAxis ("Horizontal");
-		float RScale = Input.GetAxis ("Horizontal_Negative");
-		turnSpd = Screen.width / 2 < Input.mousePosition.x ? -turnSpd: 
-			turnSpd;
+		float HScale = Input.GetAxis ("Mouse X");
 
 		this.transform.Translate(new Vector2 (0, VScale*playerSpd));
-		if (Input.GetAxis ("Jump") > 0)
-			this.GetComponent<Rigidbody2D> ().AddForce (Camera.main.WorldToViewportPoint (this.transform.position));
-		this.transform.Rotate(0,0,HScale);
+
+		this.transform.Rotate(0,0,HScale * turnSpd);
+
+		if (Input.GetAxis ("Fire1") > 0)
+			Debug.Log ("Fire");
 
 	}
 

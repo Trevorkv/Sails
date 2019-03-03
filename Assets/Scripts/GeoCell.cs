@@ -3,26 +3,39 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 
+
+/**
+* Desription: A model of a single cell item of a geoGrid plane. 
+*/
 public class GeoCell : MonoBehaviour {
 
-	[Header("Border Settings")]
-	[SerializeField] private float dimY;
-	[SerializeField] private float dimX;
-	[Header("Itemized Children")]
-	[SerializeField] private int maxSeed;
-	[SerializeField] private GameObject[] rocks;
+	//The square root of the area of the current geoCell dimension
+	private const float constDim = 10;
+	//The Length measured along the Y Axis
+	private float dimY;
+	//The Length measured along the X Axis
+	private float dimX;
 
-	private List<GameObject> rockList = new List<GameObject>();
+	[Header("Itemized Children")]
+	//The maximum number of assets to be randomly generated
+	[SerializeField] private int maxSeed;
+	//The Array of assets that will be added to the pool of randomly instantiated (Not all of them will be instantiated)
+	[SerializeField] private GameObject[] assets;
+	//The List of assets that will be Instantiated after the creation of the current instance
+	[SerializeField] private List<GameObject> assetList = new List<GameObject>();
+
+	//The GeoGrid that the current instance is a child of.
+	private GeoGrid geoGridParent;
+	//The Randomization Tool
 	static System.Random rnd = new System.Random ();
 
-	//private GeoGrid geoGridParent;
-
-
-	// Use this for initialization
+	// Gets Called after the creation of the current instance
 	void Start () {
 		Debug.Log ("Initializing");
-		//geoGridParent = this.GetComponentInParent<GeoGrid> ();
-		SpawnRocks (maxSeed);
+		dimX = constDim;
+		dimY = constDim;
+		geoGridParent = this.GetComponentInParent<GeoGrid> ();
+		SpawnAssets (maxSeed);
 	}
 	
 	// Update is called once per frame
@@ -30,63 +43,72 @@ public class GeoCell : MonoBehaviour {
 	
 	}
 
-	//make current cell center of grid
+	//Runs when body enters the dimension of the current instance
 	void OnTriggerEnter2D(Collider2D body)
 	{
 		if (body.gameObject.name == "PlayerPrefab") {
 			Debug.Log ("Inside Cell");
 			Debug.Log (body.gameObject.name);
 			Debug.Log (this.gameObject);
-			this.GetComponentInParent<GeoGrid>().SetCenter (this.gameObject);
+			geoGridParent.SetCenter (this.gameObject);
 		}
 	}
 
+	/**
+	 * Description: A Property to get and set maxSeed
+	 * Returns: maxSeed - An integer number of assets to be randomly generated
+	*/
 	public int MaxSeed
 	{
 		get{return maxSeed;}
 		set{ maxSeed = value; }
 	}
 
+	/**
+	 * Description: A Property to get dimY
+	 * Returns: DimY - A float measuring the Y Dimension of the current instance
+	*/
 	public float DimY
 	{
-		get{return dimY; }
-		set{ dimY = value; }
+		get{ return dimY; }
 	}
 
+	/**
+	 * Description: A Property to get dimX
+	 * Returns: DimX - A float measuring the X Dimension of the current instance
+	*/
 	public float DimX
 	{
-		get{return dimX; }
-		set{ dimX = value; }
+		get{ return dimX; }
 	}
 
 	/**
 	 * Desription: Spawns between 0 to maxSeed number of rocks within the bounds of the current gameObject
-	 * Param: maxSeed is an int used to determine the maximum number of prefabs to be instantiated
+	 * Param: maxSeed - An int used to determine the maximum number of prefabs to be instantiated
 	 * 
 	*/
-	private void SpawnRocks(int maxSeed)
+	private void SpawnAssets(int maxSeed)
 	{
-		
-		int rockId = 0;
-		int numOfRocks = rnd.Next (1, maxSeed);
+		int assetID = 0;
+		int numOfAssets = rnd.Next (1, maxSeed);
 
-		for(int loop = 0; loop < numOfRocks; loop++)
+		for(int loop = 0; loop < numOfAssets; loop++)
 		{
-			rockId = rnd.Next(0, rocks.Length);
-			rockList.Add (Instantiate (rocks [rockId]));
-			rockList[loop].transform.SetParent (gameObject.transform);
-			RanDisplaceRock (loop, rnd);
+			assetID = rnd.Next(0, assets.Length);
+			assetList.Add (Instantiate (assets [assetID]));
+			assetList[loop].transform.SetParent (gameObject.transform);
+			RandDisplaceAssets (loop, rnd);
 		}
 	}
 
 
 	/**
 	 * Description: Randomly sets the position of the rock prefabs within the bounds of the current gameObject
-	 * Param: id is an int used to determine the index of the rock prefab to displace
-	 * 		  rnd is a System.Random object used as a rando number generator
+	 * Param: id - An int used to determine the index of the rock prefab to displace
+	 * 		  rnd - A System.Random object used as a rando number generator
 	 *
 	 */
-	private void RanDisplaceRock(int id, System.Random rnd)
+	private void RandDisplaceAssets(int id, System.Random rnd)
 	{
 
 		float posX = System.Convert.ToSingle(rnd.NextDouble() * DimX);
@@ -94,7 +116,7 @@ public class GeoCell : MonoBehaviour {
 
 		Debug.Log ("PosX: " + posX + " posY: " + posY);
 
-		rockList [id].transform.localPosition = new Vector3(posX, posY);
+		assetList [id].transform.localPosition = new Vector3(posX, posY);
 	}
 
-}
+}//End Of Class

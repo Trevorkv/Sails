@@ -9,12 +9,11 @@ using System.Threading;
 */
 public class GeoCell : MonoBehaviour {
 
-	//The square root of the area of the current geoCell dimension
-	private const float constDim = 10;
+	[Header("Dimensions")]
 	//The Length measured along the Y Axis
-	private float dimY;
+	[SerializeField] private float dimY;
 	//The Length measured along the X Axis
-	private float dimX;
+	[SerializeField] private float dimX;
 
 	[Header("Itemized Children")]
 	//The maximum number of assets to be randomly generated
@@ -31,13 +30,10 @@ public class GeoCell : MonoBehaviour {
 
 	// Gets Called after the creation of the current instance
 	void Start () {
-		Debug.Log ("Initializing");
-		dimX = constDim;
-		dimY = constDim;
 		geoGridParent = this.GetComponentInParent<GeoGrid> ();
 		SpawnAssets (maxSeed);
 	}
-	
+	 
 	// Update is called once per frame
 	void Update () {
 	
@@ -47,9 +43,6 @@ public class GeoCell : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D body)
 	{
 		if (body.gameObject.name == "PlayerPrefab") {
-			Debug.Log ("Inside Cell");
-			Debug.Log (body.gameObject.name);
-			Debug.Log (this.gameObject);
 			geoGridParent.SetCenter (this.gameObject);
 		}
 	}
@@ -110,11 +103,8 @@ public class GeoCell : MonoBehaviour {
 	 */
 	private void RandDisplaceAssets(int id, System.Random rnd)
 	{
-
-		float posX = System.Convert.ToSingle(rnd.NextDouble() * DimX);
-		float posY = System.Convert.ToSingle(rnd.NextDouble() * DimY);
-
-		Debug.Log ("PosX: " + posX + " posY: " + posY);
+		float posX = System.Convert.ToSingle(rnd.NextDouble() * (DimX - assetList[id].GetComponent<Asset>().lengthX));
+		float posY = System.Convert.ToSingle(rnd.NextDouble() * (DimY - assetList[id].GetComponent<Asset>().lengthY));
 
 		assetList [id].transform.localPosition = new Vector3(posX, posY);
 	}

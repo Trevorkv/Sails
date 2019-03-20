@@ -43,10 +43,15 @@ public class GeoGrid : MonoBehaviour {
 	*/
 	private void InitGeoCells()
 	{
+		int jLocal = geoGridSideLength / 2 * -1;
+		int iLocal = geoGridSideLength / 2 * -1;
 		for (int i = 0; i < geoGridSideLength; i++) {
 			for (int j = 0; j < geoGridSideLength; j++) {
-					InitGeoCell (j * geoCellWidth, i * geoCellHeight, i, j);
+				InitGeoCell (jLocal * geoCellWidth, iLocal * geoCellHeight, i, j);
+				jLocal++;
 			}
+			jLocal = geoGridSideLength / 2 * -1;
+			iLocal++;
 		}
 
 		//PrintGrid ();

@@ -51,6 +51,7 @@
      <Compile Include="Assets\Scripts\GeoGrid.cs" />
      <Compile Include="Assets\Scripts\PlayerControl.cs" />
      <Compile Include="Assets\Scripts\Projector.cs" />
+     <Compile Include="Assets\Scripts\UnitConverter.cs" />
      <None Include="Assets\bin\Project Notes.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

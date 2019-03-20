@@ -103,8 +103,14 @@ public class GeoCell : MonoBehaviour {
 	 */
 	private void RandDisplaceAssets(int id, System.Random rnd)
 	{
-		float posX = System.Convert.ToSingle(rnd.NextDouble() * (DimX - assetList[id].GetComponent<Asset>().lengthX));
-		float posY = System.Convert.ToSingle(rnd.NextDouble() * (DimY - assetList[id].GetComponent<Asset>().lengthY));
+		double rndX = rnd.NextDouble ();
+		double rndY = rnd.NextDouble ();
+
+		rndX = rndX < 0.5 ? rndX * -1 : rndX - 0.5;
+		rndY = rndY < 0.5 ? rndY * -1 : rndY - 0.5;
+
+		float posX = System.Convert.ToSingle(rndX * (DimX - assetList[id].GetComponent<Asset>().lengthX));
+		float posY = System.Convert.ToSingle(rndY * (DimY - assetList[id].GetComponent<Asset>().lengthY));
 
 		assetList [id].transform.localPosition = new Vector3(posX, posY);
 	}

@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerControl : MonoBehaviour {
+public class PlayerControl : Character {
 
 	char forward;
 	char backwards;
 	char strafeLeft;
 	char strafeRight;
-	float playerSpd;
-	float turnSpd;
+
+	private float mouseShift = 0;
 
 
 	// Use this for initialization
@@ -17,24 +17,37 @@ public class PlayerControl : MonoBehaviour {
 		backwards = 's';
 		strafeLeft = 'a';
 		strafeRight = 'd';
-		playerSpd = this.GetComponent<Character> ().getMovSpeed();
-		turnSpd = this.GetComponent<Character> ().getTurnSpeed ();
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
-	
+
 	}
 
 	void FixedUpdate()
 	{
-		float VScale = Input.GetAxis ("Vertical");
-		float HScale = Input.GetAxis ("Mouse X");
+		float vScale = Input.GetAxis ("Vertical");
+		float hScale = Input.GetAxis ("Horizontal");
+		float mousePosX = Input.mousePosition.x - (Screen.width / 2);
+		float mousePosY = Input.mousePosition.y - (Screen.height / 2);
+		float currentMouseX = 0;
+		float eulerRotation = Mathf.Atan (mousePosX / mousePosY);
 
-		this.transform.Translate(new Vector2 (0, VScale*playerSpd));
-
-		this.transform.Rotate(0,0,HScale * turnSpd);
-
+		if (currentMouseX > mousePosX) {
+			eulerRotation = Mathf.Atan (mousePosX / mousePosY) * -1;
+			currentMouseX += eulerRotation;
+		} else if (currentMouseX < mousePosX) {
+			eulerRotation = Mathf.Atan (mousePosX / mousePosY) * -1;
+			currentMouseX += eulerRotation;
+		}
+		else
+			eulerRotation = 0;
+		
+		//float pyth = Mathf.Sqrt (Mathf.Pow (Input.GetAxis ("Mouse X"), 2) + Mathf.Pow (Input.GetAxis ("Mouse Y"), 2));
+		this.transform.Translate(new Vector2 (hScale * getMovSpeed(), vScale * getMovSpeed()));
+//		Debug.Log (mousePos);
+		this.transform.Rotate(0,0, eulerRotation);
+//		Debug.Log(	GetComponent<UnitConverter>().toUnits(mousePos));
 		if (Input.GetAxis ("Fire1") > 0)
 			Debug.Log ("Fire");
 

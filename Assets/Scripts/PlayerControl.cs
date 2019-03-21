@@ -3,51 +3,34 @@ using System.Collections;
 
 public class PlayerControl : Character {
 
-	char forward;
-	char backwards;
-	char strafeLeft;
-	char strafeRight;
+	Rigidbody2D myBody;
+	Vector3 transVector;
+	float angle;
 
-	private float mouseShift = 0;
-
+	Camera mainCam;
 
 	// Use this for initialization
 	void Start () {
-		forward = 'w';
-		backwards = 's';
-		strafeLeft = 'a';
-		strafeRight = 'd';
+		myBody = this.GetComponent<Rigidbody2D> ();
+		transVector = new Vector3 ();
+		mainCam = FindObjectOfType<Camera> ();
+		angle = 0;
 	}
 
 	// Update is called once per frame
 	void Update () {
+		transVector.Set (Input.GetAxisRaw ("Horizontal") * this.getMovSpeed(), Input.GetAxisRaw ("Vertical") * this.getMovSpeed(), 0);
+		Vector2 direction = mainCam.ScreenToWorldPoint (Input.mousePosition) - transform.position; 
+		angle = Mathf.Atan2(direction.y,direction.x) * Mathf.Rad2Deg;
 
+		Quaternion rot = Quaternion.AngleAxis (angle, Vector3.back);
+		transform.rotation = Quaternion.Slerp(transform.rotation, rot,this.getTurnSpeed() * Time.deltaTime);
 	}
 
 	void FixedUpdate()
 	{
-		float vScale = Input.GetAxis ("Vertical");
-		float hScale = Input.GetAxis ("Horizontal");
-		float mousePosX = Input.mousePosition.x - (Screen.width / 2);
-		float mousePosY = Input.mousePosition.y - (Screen.height / 2);
-		float currentMouseX = 0;
-		float eulerRotation = Mathf.Atan (mousePosX / mousePosY);
+		myBody.velocity = transVector;
 
-		if (currentMouseX > mousePosX) {
-			eulerRotation = Mathf.Atan (mousePosX / mousePosY) * -1;
-			currentMouseX += eulerRotation;
-		} else if (currentMouseX < mousePosX) {
-			eulerRotation = Mathf.Atan (mousePosX / mousePosY) * -1;
-			currentMouseX += eulerRotation;
-		}
-		else
-			eulerRotation = 0;
-		
-		//float pyth = Mathf.Sqrt (Mathf.Pow (Input.GetAxis ("Mouse X"), 2) + Mathf.Pow (Input.GetAxis ("Mouse Y"), 2));
-		this.transform.Translate(new Vector2 (hScale * getMovSpeed(), vScale * getMovSpeed()));
-//		Debug.Log (mousePos);
-		this.transform.Rotate(0,0, eulerRotation);
-//		Debug.Log(	GetComponent<UnitConverter>().toUnits(mousePos));
 		if (Input.GetAxis ("Fire1") > 0)
 			Debug.Log ("Fire");
 

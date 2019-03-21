@@ -20,11 +20,21 @@ public class PlayerControl : Character {
 	// Update is called once per frame
 	void Update () {
 		transVector.Set (Input.GetAxisRaw ("Horizontal") * this.getMovSpeed(), Input.GetAxisRaw ("Vertical") * this.getMovSpeed(), 0);
-		Vector2 direction = mainCam.ScreenToWorldPoint (Input.mousePosition) - transform.position; 
+
+//		Vector2 direction = transform.position - mainCam.ScreenToWorldPoint (Input.mousePosition); 
+//		angle = Mathf.Atan2(direction.y,direction.x) * Mathf.Rad2Deg;
+//
+//		Quaternion rot = Quaternion.AngleAxis (angle, Vector3.forward);
+//		transform.rotation = Quaternion.Slerp(transform.rotation, rot,this.getTurnSpeed() * Time.deltaTime);
+
+		Vector2 direction = transform.position - mainCam.ScreenToWorldPoint (Input.mousePosition); 
+		direction.Normalize ();
 		angle = Mathf.Atan2(direction.y,direction.x) * Mathf.Rad2Deg;
 
-		Quaternion rot = Quaternion.AngleAxis (angle, Vector3.back);
-		transform.rotation = Quaternion.Slerp(transform.rotation, rot,this.getTurnSpeed() * Time.deltaTime);
+		Quaternion rot = Quaternion.AngleAxis (angle, Vector3.forward);
+		transform.rotation = Quaternion.Euler(0f,0f, angle);
+
+
 	}
 
 	void FixedUpdate()

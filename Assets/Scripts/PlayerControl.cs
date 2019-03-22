@@ -5,7 +5,6 @@ public class PlayerControl : Character {
 
 	Rigidbody2D myBody;
 	Vector3 transVector;
-	float angle;
 
 	Camera mainCam;
 
@@ -14,25 +13,13 @@ public class PlayerControl : Character {
 		myBody = this.GetComponent<Rigidbody2D> ();
 		transVector = new Vector3 ();
 		mainCam = FindObjectOfType<Camera> ();
-		angle = 0;
 	}
 
 	// Update is called once per frame
 	void Update () {
 		transVector.Set (Input.GetAxisRaw ("Horizontal") * this.getMovSpeed(), Input.GetAxisRaw ("Vertical") * this.getMovSpeed(), 0);
 
-//		Vector2 direction = transform.position - mainCam.ScreenToWorldPoint (Input.mousePosition); 
-//		angle = Mathf.Atan2(direction.y,direction.x) * Mathf.Rad2Deg;
-//
-//		Quaternion rot = Quaternion.AngleAxis (angle, Vector3.forward);
-//		transform.rotation = Quaternion.Slerp(transform.rotation, rot,this.getTurnSpeed() * Time.deltaTime);
-
-		Vector2 direction = transform.position - mainCam.ScreenToWorldPoint (Input.mousePosition); 
-		direction.Normalize ();
-		angle = Mathf.Atan2(direction.y,direction.x) * Mathf.Rad2Deg;
-
-		Quaternion rot = Quaternion.AngleAxis (angle, Vector3.forward);
-		transform.rotation = Quaternion.Euler(0f,0f, angle);
+		CalcRotation ();
 
 
 	}
@@ -44,6 +31,15 @@ public class PlayerControl : Character {
 		if (Input.GetAxis ("Fire1") > 0)
 			Debug.Log ("Fire");
 
+	}
+
+	private void CalcRotation()
+	{
+		float offset = (Mathf.PI/2) * Mathf.Rad2Deg;	
+		Vector2 direction =  mainCam.ScreenToWorldPoint (Input.mousePosition) - transform.position; 
+		direction.Normalize ();
+		float angle = Mathf.Atan2(direction.y,direction.x) * Mathf.Rad2Deg - offset;
+		transform.rotation = Quaternion.Euler(0f,0f, angle);
 	}
 
 

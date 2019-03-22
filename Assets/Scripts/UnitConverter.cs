@@ -29,7 +29,7 @@ public class UnitConverter : MonoBehaviour {
 	/**
 	 * Description: converts the given pixels to unity units
 	*/
-	public float toUnits(float pixels)
+	public float ToUnits(float pixels)
 	{
 		return pixels / pixelsPerUnit;
 	}

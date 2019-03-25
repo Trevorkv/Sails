@@ -50,8 +50,9 @@
      <Compile Include="Assets\Scripts\GeoCell.cs" />
      <Compile Include="Assets\Scripts\GeoGrid.cs" />
      <Compile Include="Assets\Scripts\PlayerControl.cs" />
-     <Compile Include="Assets\Scripts\Projector.cs" />
+     <Compile Include="Assets\Scripts\Projectile.cs" />
      <Compile Include="Assets\Scripts\UnitConverter.cs" />
+     <Compile Include="Assets\Scripts\Weapon.cs" />
      <Compile Include="Assets\Scripts\debug-scripts\camRayTest.cs" />
      <None Include="Assets\bin\Project Notes.txt" />
  <Reference Include="UnityEngine.UI">

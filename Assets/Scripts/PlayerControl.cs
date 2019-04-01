@@ -33,6 +33,10 @@ public class PlayerControl : Character {
 
 	}
 
+
+	/**
+	 * Runs a condition to handle player attack 
+	*/
 	private void CheckForAttack()
 	{
 		if (Input.GetButtonDown ("Fire1")) {
@@ -40,6 +44,9 @@ public class PlayerControl : Character {
 		}
 	}
 
+	/**
+	 * Description: Rotates the current transform to face the location of the mouse pointer 
+	*/
 	private void CalcRotation()
 	{
 		float offset = (Mathf.PI/2) * Mathf.Rad2Deg;	
@@ -49,6 +56,9 @@ public class PlayerControl : Character {
 		transform.rotation = Quaternion.Euler(0f,0f, angle);
 	}
 
+	/**
+	 * Description: Sets the position of the camera's transform to that of the current gameobject 
+	*/
 	private void cameraMovementHelper()
 	{
 		Transform camTransform = mainCam.GetComponent<Transform> ();
@@ -56,12 +66,13 @@ public class PlayerControl : Character {
 			camTransform.position.z);
 	}
 
+	/**
+	 * Description: Returns a Vector2 that shows the magnitude and direction of the moue pointer relative to the 
+	 * 				position of the current gameobject.
+	*/
 	private Vector2 calCursorDirection()
 	{
-		Vector2 ret = mainCam.ScreenToWorldPoint (Input.mousePosition) - transform.position;
-//		Vector2 offset = new Vector2(transform.lossyScale.x / 2, transform.lossyScale.y / 2);
-//		return ret.x > 0 ? ret + offset : ret - offset; 
-		return ret;
+		return mainCam.ScreenToWorldPoint (Input.mousePosition) - transform.position;
 	}
 
 

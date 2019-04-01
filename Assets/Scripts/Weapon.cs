@@ -29,7 +29,8 @@ public class Weapon : MonoBehaviour {
 	}
 
 	/**
-	 * Description: 
+	 * Description: Calculates relevant data to be passed on to a newly created gameObject's projectile script to handle
+	 * 				collision and pathing logic.
 	*/
 	public void Attack(Vector2 direction)
 	{
@@ -37,6 +38,7 @@ public class Weapon : MonoBehaviour {
 		GameObject projectile = (GameObject)Instantiate (this.projectile, this.transform.position,
 			                        this.transform.rotation);
 
+		Debug.Log (projectile);
 		projectile.GetComponent<Projectile> ().Shoot (direction, speed);
 	}
 

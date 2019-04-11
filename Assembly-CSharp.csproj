@@ -47,6 +47,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\Asset.cs" />
      <Compile Include="Assets\Scripts\Character.cs" />
+     <Compile Include="Assets\Scripts\CrossHairController.cs" />
      <Compile Include="Assets\Scripts\GeoCell.cs" />
      <Compile Include="Assets\Scripts\GeoGrid.cs" />
      <Compile Include="Assets\Scripts\PlayerControl.cs" />

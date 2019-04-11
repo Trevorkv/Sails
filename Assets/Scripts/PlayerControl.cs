@@ -40,7 +40,8 @@ public class PlayerControl : Character {
 	private void CheckForAttack()
 	{
 		if (Input.GetButtonDown ("Fire1")) {
-			myWeapon.GetComponent<Weapon> ().Attack (calCursorDirection());
+		//	myWeapon.GetComponent<Weapon> ().Attack (calCursorDirection()); Commented out due to changes in Wepon class
+			myWeapon.GetComponent<Weapon>().Attack();
 		}
 	}
 

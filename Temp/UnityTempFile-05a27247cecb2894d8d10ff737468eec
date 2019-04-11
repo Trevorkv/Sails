@@ -84,6 +84,7 @@
 -define:UNITY_TEAM_LICENSE
 Assets/Scripts/Asset.cs
 Assets/Scripts/Character.cs
+Assets/Scripts/CrossHairController.cs
 Assets/Scripts/GeoCell.cs
 Assets/Scripts/GeoGrid.cs
 Assets/Scripts/PlayerControl.cs

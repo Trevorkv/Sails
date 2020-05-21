@@ -109,8 +109,8 @@ public class GeoCell : MonoBehaviour {
 		rndX = rndX < 0.5 ? rndX * -1 : rndX - 0.5;
 		rndY = rndY < 0.5 ? rndY * -1 : rndY - 0.5;
 
-		float posX = System.Convert.ToSingle(rndX * (DimX - assetList[id].GetComponent<Asset>().lengthX));
-		float posY = System.Convert.ToSingle(rndY * (DimY - assetList[id].GetComponent<Asset>().lengthY));
+		float posX = System.Convert.ToSingle(rndX * (DimX - assetList[id].GetComponent<Asset>().LengthX));
+		float posY = System.Convert.ToSingle(rndY * (DimY - assetList[id].GetComponent<Asset>().LengthY));
 
 		assetList [id].transform.localPosition = new Vector3(posX, posY);
 	}

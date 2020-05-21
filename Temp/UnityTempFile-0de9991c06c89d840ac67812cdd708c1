@@ -87,6 +87,7 @@ Assets/Scripts/Character.cs
 Assets/Scripts/CrossHairController.cs
 Assets/Scripts/GeoCell.cs
 Assets/Scripts/GeoGrid.cs
+Assets/Scripts/NPC.cs
 Assets/Scripts/PlayerControl.cs
 Assets/Scripts/Projectile.cs
 Assets/Scripts/UnitConverter.cs

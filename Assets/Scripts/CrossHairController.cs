@@ -3,7 +3,7 @@ using System.Collections;
 
 public class CrossHairController : MonoBehaviour {
 
-	Collider2D target = null;
+	private GameObject target = null;
 
 	// Use this for initialization
 	void Start () {
@@ -12,16 +12,16 @@ public class CrossHairController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		setCursorLocation ();
-		Debug.Log ("Targeting : " + target);
+	//	setCursorLocation ();
 	}
+
 
 	/**
 	 * Description: Upon overlapping with body, assign the target member with body's value
 	*/
 	void OnTriggerEnter2D(Collider2D body)
 	{
-		target = body;
+		target = body.gameObject;
 	}
 
 	/**
@@ -38,9 +38,9 @@ public class CrossHairController : MonoBehaviour {
 		//If not or target = null, do nothing but perform weapon attack animation/ ammo dump etc
 		//if target is interactible, run overloaded apply attack.
 		//target.gameObject.GetComponent
-		if (target != null /* || target.GetComponent<Asset>().isInteractible*/) {
-			//target.applyDamagee();
-			Debug.Log("Applied Damage at : " + this.transform.localPosition);
+		if (target != null && target.GetComponent<Asset>().isInteractible) {
+			target.GetComponent<Character>().subHealth(dmg);
+			Debug.Log("Applied Damage to : " + target.name);
 		}
 	}
 
@@ -66,9 +66,9 @@ public class CrossHairController : MonoBehaviour {
 	 * Description: Sets the cursor sprite location to be equvalent to the position of the mouse position relative to
 	 * 				the world point.
 	*/
-	private void setCursorLocation()
-	{
-		Vector3 cursorPos2 = new Vector3 (Input.mousePosition.x, Input.mousePosition.y, 1);
-		this.transform.localPosition = FindObjectOfType<Camera> ().ScreenToWorldPoint(cursorPos2);
-	}
+//	private void setCursorLocation()
+//	{
+//		Vector3 cursorPos2 = new Vector3 (Input.mousePosition.x, Input.mousePosition.y, 1);
+//		this.transform.localPosition = FindObjectOfType<Camera> ().ScreenToWorldPoint(cursorPos2);
+//	}
 }
